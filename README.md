@@ -154,6 +154,6 @@ import scvelo as scv   # RNA velocity
 
 ## Citation
 
-> Chatterjee D, Bhavna R, Bhatt A, Bhatt P, Bhatt S, et al.  
+> Chatterjee D, et al.  
 > *Single-cell transcriptomics identifies Keap1-Nrf2 regulated collective invasion in a Drosophila tumor model.*  
 > **eLife** 2022;11:e80956. https://doi.org/10.7554/eLife.80956
