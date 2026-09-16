@@ -1,5 +1,7 @@
 # Single-cell transcriptomics identifies Keap1-Nrf2 regulated collective invasion in a *Drosophila* tumor model
 
+> AI tools were used in developing this repository — see [AI_DISCLOSURE.md](AI_DISCLOSURE.md) for details.
+
 **eLife 2022;11:e80956 · DOI: [10.7554/eLife.80956](https://doi.org/10.7554/eLife.80956)**
 
 ---
