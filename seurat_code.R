@@ -59,11 +59,7 @@ lgl <- CellCycleScoring(lgl, s.features = s.genes, g2m.features = g2m.genes, set
 lgl$CC.Difference <- lgl$S.Score - lgl$G2M.Score
 lgl <- FindVariableFeatures(lgl, selection.method = "vst", nfeatures = 2000)
 lgl <- ScaleData(lgl, vars.to.regress = c("CC.Difference", "percent.mt", "nCount_spliced"), verbose = TRUE)
-# NOTE: features = VariableFeatures(pbmc) -- `pbmc` isn't assigned until
-# later in this script (`all.combined -> pbmc` below); likely a leftover
-# object name from Seurat's own tutorial naming convention. Left as
-# originally run, for provenance.
-lgl <- RunPCA(lgl, features = VariableFeatures(pbmc), npcs = 100, nfeature.print = 10, ndims.print = 1:5, verbose = T)
+lgl <- RunPCA(lgl, features = VariableFeatures(lgl), npcs = 100, nfeature.print = 10, ndims.print = 1:5, verbose = T)
 lgl <- FindNeighbors(lgl, dims = 1:60)
 lgl <- FindClusters(lgl, resolution = 1)
 
