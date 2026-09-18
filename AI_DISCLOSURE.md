@@ -21,3 +21,12 @@ Specific uses include:
 
 Experimental design, data interpretation, and all scientific conclusions in
 this repository are the author's own.
+
+**`nextflow_pipeline/` specifically**: its Nextflow structure (modules,
+subworkflows, parameterization, conda environments, test scaffolding) was
+written by Claude and reviewed/validated by the author. The bulk RNA-seq and
+scRNA-seq/velocity logic it runs is a direct, parameterized port of this
+repo's own author-written `bulkSeq_code.R`/`seurat_code.R`/`scvelo_code.py`.
+Its `scenic` mode ports a separate pipeline (originally Claude-written,
+author-reviewed) from an unrelated project and does not apply to this
+repo's data — see `nextflow_pipeline/README.md`.

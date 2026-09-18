@@ -1,0 +1,11 @@
+name: seurat_velocity_prep
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base=4.2.*
+  - r-seurat=4.3.*
+  - r-seuratdisk
+  - r-velocyto.r
+  - r-optparse
+  - r-jsonlite

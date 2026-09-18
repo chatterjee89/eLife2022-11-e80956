@@ -35,7 +35,9 @@ scRNA-seq data are available on SRA: control (SRX7814226 / SRP321151), lglRNAi (
 ├── preprocessing_code.sh   # Shell: STAR alignment, featureCounts, Cell Ranger, Velocyto
 ├── bulkSeq_code.R          # R: bulk RNA-seq QC, DESeq2 diagnostics, edgeR DGE
 ├── seurat_code.R           # R: scRNA-seq clustering and CCA integration (Seurat v4)
-└── scvelo_code.py          # Python: RNA velocity analysis (scVelo)
+├── scvelo_code.py          # Python: RNA velocity analysis (scVelo)
+└── nextflow_pipeline/      # Generalized Nextflow version of bulkSeq_code.R + seurat_code.R/scvelo_code.py
+                             # — see "Reproducing this analysis via Nextflow" below
 ```
 
 ---
@@ -107,6 +109,62 @@ Applied to **cluster 7 cells** (invasive population) exported from Seurat:
 2. **Dynamical model** — kinetic parameter recovery via `recover_dynamics` for higher accuracy
 3. Latent time estimation → pseudotime-ordered heatmap of top velocity genes
 4. Velocity confidence scoring and gene ranking per cluster
+
+---
+
+## Reproducing this analysis via Nextflow
+
+The bulk RNA-seq and scRNA-seq/velocity steps above (`bulkSeq_code.R`,
+`seurat_code.R`, `scvelo_code.py`) are also available as a generalized,
+parameterized Nextflow pipeline in [`nextflow_pipeline/`](nextflow_pipeline/)
+— one command per step instead of running each script by hand, with a
+dedicated conda environment per step. It does **not** run
+`preprocessing_code.sh`'s alignment/quantification; start it from that
+step's outputs, same as the scripts above do.
+
+**Bulk RNA-seq DE** (equivalent to `bulkSeq_code.R`):
+```bash
+nextflow run nextflow_pipeline/main.nf -profile conda --mode bulk_de \
+  --bulk_counts featurecounts_bulkSeq.csv \
+  --bulk_sample_info sample_info.csv \
+  --deseq2_group_columns Genotype,Time \
+  --bulk_contrast_column PC1 \
+  --bulk_contrast_levels yes,no
+```
+
+**scRNA-seq clustering/integration** (equivalent to `seurat_code.R`):
+```bash
+nextflow run nextflow_pipeline/main.nf -profile conda --mode scrna_velocity \
+  --scrna_ctrl_10x_dir Ctrl_FC/ \
+  --scrna_ctrl_sample_name Ctrl_FC \
+  --scrna_treatment_loom LglIR.loom \
+  --scrna_treatment_sample_name LglIR_FC \
+  --scrna_cell_cycle_genes cell_cycle_genes.txt
+```
+Every QC/clustering parameter in the tables above (max UMI, feature range,
+max mito%, PCs, resolutions, UMAP settings) already defaults to this repo's
+own values — override any of them with `--scrna_*` flags if you want to
+explore different settings; see `nextflow_pipeline/README.md` for the full
+list.
+
+**RNA velocity** (equivalent to `scvelo_code.py`), once you have the
+cluster-7-subset Seurat object with velocyto assays described in Step 3:
+```bash
+nextflow run nextflow_pipeline/main.nf -profile conda --mode scrna_velocity \
+  --scrna_ctrl_10x_dir Ctrl_FC/ --scrna_treatment_loom LglIR.loom \
+  --scrna_cell_cycle_genes cell_cycle_genes.txt \
+  --scrna_velocity_rds cluster7_velocity.rds
+```
+
+Validate the wiring first, with no real data or compute, via:
+```bash
+nextflow run nextflow_pipeline/main.nf -profile test -stub-run --mode full
+```
+
+`nextflow_pipeline/` also exposes a `scenic` mode — that ports an unrelated
+gene-regulatory-network pipeline from a different mouse project and doesn't
+apply to this repo's *Drosophila* data; see its own README for why it's
+there.
 
 ---
 

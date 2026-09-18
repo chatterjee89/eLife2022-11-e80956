@@ -2,6 +2,9 @@
 # (Anthropic) was used afterward, retrospectively, to organize the
 # repository (file layout, README) — not to write or modify the analysis
 # logic below. See AI_DISCLOSURE.md for the full disclosure.
+# A generalized, parameterized Nextflow version of this script (`--mode
+# bulk_de`) is available in nextflow_pipeline/ -- see its README, or the
+# "Reproducing this analysis via Nextflow" section of the repo-root README.
 # Two separate DE frameworks are used in this script: DESeq2 first, purely
 # for pre-processing diagnostics (normalization QC plots, PCA, and a
 # hierarchical-clustering heatmap) -- then edgeR separately, further down,

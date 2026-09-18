@@ -2,6 +2,10 @@
 # (Anthropic) was used afterward, retrospectively, to organize the
 # repository (file layout, README) — not to write or modify the analysis
 # logic below. See AI_DISCLOSURE.md for the full disclosure.
+# A generalized, parameterized Nextflow version of this script (`--mode
+# scrna_velocity`) is available in nextflow_pipeline/ -- see its README, or
+# the "Reproducing this analysis via Nextflow" section of the repo-root
+# README.
 import scvelo as scv
 
 # Pre-processed AnnData object (spliced/unspliced counts + Seurat cluster

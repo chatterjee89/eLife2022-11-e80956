@@ -1,0 +1,10 @@
+work/
+.nextflow/
+.nextflow.log*
+.conda_envs/
+results/
+test_results/
+.DS_Store
+.Rhistory
+__pycache__/
+*.pyc

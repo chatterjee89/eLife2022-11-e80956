@@ -1,0 +1,21 @@
+name: r_scenic
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base=4.2.*
+  - r-scenic
+  - bioconductor-rcistarget
+  - bioconductor-genie3
+  - bioconductor-aucell
+  - r-loomr
+  - r-scopeloomr
+  - r-seuratdisk
+  - r-seurat=4.3.*
+  - r-optparse
+  - r-dplyr
+  - r-tidyr
+  - r-philentropy
+  - r-pheatmap
+  - r-viridis
+  - bioconductor-complexheatmap

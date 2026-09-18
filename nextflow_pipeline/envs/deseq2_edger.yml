@@ -1,0 +1,15 @@
+name: deseq2_edger
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base=4.2.*
+  - bioconductor-deseq2=1.38.*
+  - bioconductor-edger=3.40.*
+  - bioconductor-limma=3.54.*
+  - r-pheatmap
+  - r-rcolorbrewer
+  - r-gplots
+  - r-knitr
+  - r-optparse
+  - r-jsonlite

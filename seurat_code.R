@@ -2,6 +2,10 @@
 # (Anthropic) was used afterward, retrospectively, to organize the
 # repository (file layout, README) — not to write or modify the analysis
 # logic below. See AI_DISCLOSURE.md for the full disclosure.
+# A generalized, parameterized Nextflow version of this script (`--mode
+# scrna_velocity`) is available in nextflow_pipeline/ -- see its README, or
+# the "Reproducing this analysis via Nextflow" section of the repo-root
+# README.
 #CONTROL: w1118
 # Load w1118 control 10x Genomics counts and build the base Seurat object.
 ctrl.data <- Read10X(data.dir = "~/Ctrl_FC/new_reference/")

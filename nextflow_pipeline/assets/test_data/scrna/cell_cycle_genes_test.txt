@@ -1,0 +1,6 @@
+g2m_gene_1
+g2m_gene_2
+g2m_gene_3
+s_gene_1
+s_gene_2
+s_gene_3

@@ -1,0 +1,14 @@
+name: scvelo
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.10.*
+  - scvelo=0.3.*
+  - scanpy
+  - anndata
+  - python-igraph
+  - louvain
+  - pip
+  - pip:
+      - matplotlib
