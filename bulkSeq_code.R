@@ -1,3 +1,7 @@
+# AI usage note: this analysis code was written by the author. Claude Code
+# (Anthropic) was used afterward, retrospectively, to organize the
+# repository (file layout, README) — not to write or modify the analysis
+# logic below. See AI_DISCLOSURE.md for the full disclosure.
 library(edgeR)
 library(limma)
 library(pheatmap)
