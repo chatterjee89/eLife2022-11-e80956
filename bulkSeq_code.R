@@ -191,15 +191,11 @@ y <- estimateGLMCommonDisp(y,design)
 y <- estimateGLMTrendedDisp(y,design)
 y <- estimateGLMTagwiseDisp(y,design)
 fit <- glmQLFit(y,design)
-lrt<-glmLRT(fit) # exploratory LRT fit; superseded by the QL/glmTreat test below
 
 my.contrasts <- makeContrasts(PC1=yes-no, levels=design)
 
-# NOTE: qlf.PC1 is assigned twice. The plain QL F-test on the first line is
-# immediately overwritten by glmTreat on the second, which tests against a
-# >=1.2-fold-change threshold rather than "significantly different from
-# zero" -- the glmTreat result is what's actually used below.
-qlf.PC1 <- glmQLFTest(fit, contrast=my.contrasts[,"PC1"])
+# glmTreat tests against a >=1.2-fold-change threshold rather than just
+# "significantly different from zero".
 qlf.PC1 <- glmTreat(fit, contrast=my.contrasts[,"PC1"], lfc=log2(1.2))
 
 de1 <- decideTestsDGE(qlf.PC1, adjust.method="BH", p.value=0.05)
