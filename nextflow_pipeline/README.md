@@ -43,6 +43,119 @@ scripts assumed. It starts from:
 - `scenic`: an expression matrix as a `.loom` file, plus cisTarget motif
   databases for your organism
 
+## Step-by-step guide for first-time users
+
+No command-line or Nextflow experience assumed. If you're redoing this
+repo's own analysis, the two commands you actually need are in the
+[repo-root README](../README.md#reproducing-this-analysis-via-nextflow),
+pre-filled with this repo's file names — this section explains what those
+commands mean and how to get to the point of running them.
+
+### 1. What you're installing (one-time setup, a few minutes)
+
+Two pieces of software, neither of which is R, Python, Seurat, or DESeq2 —
+the pipeline installs all of *those* for you automatically, per step, the
+first time it needs them.
+
+- **Nextflow** — the "conductor" that reads this pipeline and runs each
+  step in the right order, keeping a log of what succeeded and what
+  didn't. Install: <https://www.nextflow.io/docs/latest/install.html>
+  (on Mac/Linux, it's usually one `curl` command).
+- **conda** or **mamba** — a package manager that builds a self-contained
+  toolbox of software for each step (so the DESeq2 step and the Seurat step
+  can each get exactly the R packages they need, without conflicting with
+  each other). If you already have Anaconda/Miniconda/Miniforge installed
+  for other bioinformatics work, you already have this.
+
+Check both are installed by opening a terminal and running:
+```bash
+nextflow -version
+conda -version
+```
+If either prints "command not found," revisit its install step above
+before continuing.
+
+### 2. Where to run commands
+
+Everything below is run from a **terminal** (Terminal.app on Mac, or your
+cluster's SSH terminal), not by double-clicking any file. Navigate into the
+folder where you downloaded/cloned this repository — the one that contains
+this `nextflow_pipeline/` folder alongside `bulkSeq_code.R`, `seurat_code.R`,
+etc. — for example:
+```bash
+cd ~/Downloads/eLife2022-11-e80956
+```
+Every command in this guide is run from *that* folder (the repo root, one
+level above `nextflow_pipeline/`), not from inside `nextflow_pipeline/`
+itself — that's why the commands below start with `nextflow run
+nextflow_pipeline/main.nf` rather than just `nextflow run main.nf`.
+
+### 3. Try it safely first — no real data, no long wait
+
+Before pointing this at your actual sequencing data, run this once to
+confirm Nextflow and the pipeline itself are wired up correctly. It uses
+tiny placeholder files and skips all the real computation, so it finishes
+in seconds rather than hours:
+```bash
+nextflow run nextflow_pipeline/main.nf -profile test -stub-run --mode full
+```
+If this prints `Pipeline completed successfully` at the end (skim past the
+colorful progress lines above it), your setup is good and you can move on
+to real data. If it errors out, that's an installation problem to fix now,
+before you spend hours waiting on a real run only to hit the same error.
+
+### 4. Run it on your real data
+
+Make sure the input files this step needs are sitting in your repo-root
+folder (same ones the original R/Python scripts needed — see "Required
+input files" in the [repo-root README](../README.md)), then run the
+relevant command from [there](../README.md#reproducing-this-analysis-via-nextflow).
+The first real run will be slower than usual because conda is building
+each step's toolbox for the first time — subsequent runs reuse those and
+start immediately.
+
+While it runs, Nextflow prints one line per step, updating in place, e.g.:
+```
+executor >  local (2)
+[a1/2b3c4d] process > EDGER_DE (bulk_de)       [100%] 1 of 1 ✔
+[f5/6g7h8i] process > DESEQ2_DIAGNOSTICS (bulk_de) [100%] 1 of 1 ✔
+```
+A ✔ means that step finished; a ✘ means it failed (see troubleshooting
+below). This is normal to watch run for anywhere from minutes (bulk DE) to
+hours (Seurat integration, SCENIC's GENIE3 step) depending on your data size
+and machine.
+
+### 5. Where your results end up
+
+Everything lands in a new `results/` folder, created automatically inside
+whichever directory you ran the command from — you don't need to create it
+yourself, and nothing overwrites your original scripts or data. Inside,
+outputs are grouped by mode and step, e.g. `results/bulk_de/edger_de/` holds
+the differential expression gene table, `results/scrna_velocity/seurat_process/`
+holds the clustering plots and the integrated object, and so on. If
+`--run_multiqc` wasn't disabled (it's on by default), there's also a single
+`results/report/multiqc_report.html` you can open in a browser for a
+one-page summary of every step that ran.
+
+### 6. If something goes wrong
+
+- **Re-running after a fix**: add `-resume` to your command
+  (`nextflow run nextflow_pipeline/main.nf -resume ...`). Nextflow will
+  skip every step that already finished successfully and only re-run the
+  one that failed (and anything downstream of it) — you don't lose
+  completed work by fixing a typo and trying again.
+- **Finding out *why* a step failed**: the terminal output names the failed
+  step and gives a folder path like `work/a1/2b3c4d...` — inside that
+  folder, `.command.log` (or `.command.err`) has the actual error message
+  from the underlying R/Python script, same as if you'd run it by hand.
+- **First run seems stuck on "creating conda environment"**: this is
+  normal and can take several minutes per step the very first time; it's
+  downloading and installing software, not hung. Only worry if it's been
+  stuck with no disk/network activity for a long time.
+- **Still stuck**: every parameter this guide's commands use (and many more
+  for fine-tuning) is documented in `nextflow.config` in this folder, with
+  the value each one defaults to.
+
 ## Usage
 
 ```bash
